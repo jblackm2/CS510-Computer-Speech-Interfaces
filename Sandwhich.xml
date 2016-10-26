@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1">
+<var name="totalCost" expr="0"></var>
+<var name="orderArray" expr="new Array()"></var>
+  <form id = "greeting">
+    
+      <field name="addDrinkOrSandwhich">
+            <prompt timeout="5s">Welcome to the Magic meal ordering telephone line<break/> Would you like to order a <emphasis/>drink or a <emphasis/>sandwhich?
+            </prompt>
+            <grammar type="application/grammar+xml" root="orderType" version="1.0">
+              <rule id="orderType" scope="public">
+                <one-of>
+                  <item>drink</item>
+                  <item>sandwhich</item>
+                </one-of>
+              </rule>
+            </grammar>
+            <noinput>
+              Please say drink, or sandwhich.
+              <reprompt/>
+            </noinput>
+            <nomatch>
+              That is not an acceptable option.
+              <reprompt/>
+            </nomatch>
+      </field>
+      <filled>
+        <if cond="addDrinkOrSandwhich == 'drink'">
+          <prompt>Thanks, <break/> redirecting to drink menu.</prompt>
+          <goto next="#Drink"></goto>
+        </if>
+        <elseif cond="addDrinkOrSandwhich == 'sandwhich'">
+          <prompt>Thanks, <break/> redirecting to sandwhich menu.</prompt>
+          <goto next="#Sandwhich"></goto>
+        </elseif>
+      </filled>
+  </form>
+  
+  <form id="Drink">
+    <var name="drinkList" expr="'  '"></var>
+  <field name="drinkType">
+  <prompt>What kind of drink would you like? ,<break/><emphasis/>Coke <emphasis/>Pepsi, or <emphasis/>7 up</prompt>
+        <grammar type="application/grammar+xml" root="drinkType" version="1.0">
+              <rule id="drinkType" scope="public">
+                <one-of>
+                  <item>Coke</item>
+                  <item>Pepsi</item>
+                  <item>7 up</item>
+                </one-of>
+              </rule>
+        </grammar>
+        <noinput>
+            Please say your drink type.
+          <reprompt/>
+        </noinput>
+        <nomatch>
+          That is not an acceptable option.
+          <reprompt/>
+        </nomatch>
+        <filled>
+          <assign name="totalCost" expr="totalCost + 1.00"></assign>
+          <if cond="drinkType =='Coke'">
+          </if>
+          <elseif cond="drinkType == 'Pepsi'">
+          </elseif>
+          <elseif cond="drinkType == '7 up'">
+          </elseif>
+          <var name="temp1" expr="drinkType"></var>
+          <prompt>I like <value expr="temp1"/></prompt>
+          <var name="temp2" expr="drinkList"></var>
+          <!--assign name="drinkList" expr="temp2 + 'Testing Testing Testing'"></assign-->
+          <assign name="drinkList" expr="temp2 + temp1"></assign>
+          <prompt>You ordered a  <value expr="drinkList"></value></prompt>
+          <field name="endOfDrinkMenu">
+            <prompt>Would you like to order another drink, order a sandwhich, edit your order, or finish your order?</prompt>
+              <grammar type="application/grammar+xml" root="endOfDrinkMenu" version="1.0">
+                <rule id="endOfDrinkMenu" scope="public">
+                  <one-of>
+                    <item>drink</item>
+                    <item>sandwhich</item>
+                    <item>edit</item>
+                    <item>finish</item>
+                  </one-of>
+                </rule>
+              </grammar>
+              <filled>
+                <if cond="endOfDrinkMenu == 'drink'">
+                  <goto next="Drink"></goto>
+                </if>
+                <elseif cond="endOfDrinkMenu =='sandwhich'">
+                  <goto next="Sandwhich"></goto>
+                </elseif>
+                <elseif cond="endOfDrinkMenu =='edit">
+                  <goto next="Edit"></goto>
+                </elseif>
+                <elseif cond="endOfDrinkMenu =='finish'">
+                  <goto next="Finish"></goto>
+                </elseif>
+              </filled>
+              <noinput>
+                <reprompt/>
+              </noinput>
+              <nomatch>
+                <field name="endOfDrinkMenuTapered">
+                  <prompt>Say drink, sandwhich, order, or done</prompt>
+                    <grammar type="application/grammar+xml" root="endOfDrinkMenuTapered" version="1.0">
+                      <rule id="endOfDrinkMenuTapered" scope="public">
+                        <one-of>
+                          <item>drink</item>
+                          <item>sandwhich</item>
+                          <item>edit</item>
+                          <item>done</item>
+                        </one-of>
+                      </rule>
+                    </grammar>
+                    <filled>
+                      <if cond="endOfDrinkMenuTapered == 'drink'">
+                        <goto next="Drink"></goto>
+                      </if>
+                      <elseif cond="endOfDrinkMenuTapered =='sandwhich'">
+                        <goto next="Sandwhich"></goto>
+                      </elseif>
+                      <elseif cond="endOfDrinkMenuTapered =='edit">
+                        <goto next="Edit"></goto>
+                      </elseif>
+                      <elseif cond="endOfDrinkMenuTapered =='done'">
+                        <goto next="Finish"></goto>
+                      </elseif>
+                    </filled>
+                    <noinput>
+                      <reprompt/>
+                    </noinput>
+                    <nomatch>
+                      <reprompt/>
+                    </nomatch>
+                </field>
+              </nomatch>
+          </field>
+          <prompt> Your Cost is <break/> $<value expr="totalCost"></value></prompt>
+        </filled>
+    </field>
+  </form>
+  
+  <form id="Sandwhich">
+    <var name="sandwhich" expr=""></var>
+    <field name="breadType">
+      <prompt>What kind of bread would you like? ,<break/><emphasis/>wheat <emphasis/>rye, or <emphasis/>sour dough</prompt>
+        <grammar type="application/grammar+xml" root="breadType" version="1.0">
+              <rule id="breadType" scope="public">
+                <one-of>
+                  <item>wheat</item>
+                  <item>rye</item>
+                  <item>sour dough</item>
+                </one-of>
+              </rule>
+        </grammar>
+        <noinput>
+            Please say your bread type.
+          <reprompt/>
+        </noinput>
+        <nomatch>
+          That is not an acceptable option.
+          <reprompt/>
+        </nomatch>
+        <filled>
+          <assign name="totalCost" expr="totalCost + 2.00"></assign>
+          <if cond="breadType =='wheat'">
+            <assign name="sandwhich" expr="sandwhich + Your sanwdwhich has wheat bread, "></assign>
+          </if>
+          <elseif cond="breadType == 'rye'">
+            <assign name="sandwhich" expr="sandwhich + Your sanwdwhich has rye bread, "></assign>
+          </elseif>
+          <elseif cond="breadType == 'sour dough'">
+            <assign name="sandwhich" expr="sandwhich + Your sanwdwhich has wheat bread, "></assign>
+          </elseif>
+          <var name="temp" expr="breadType"></var>
+          <prompt>I like <value expr="temp"/></prompt>
+          <assign name="sandwhich" expr="sandwhich + Your sanwdwhich has temp"></assign>
+        </filled>
+    </field>
+  </form>
+  
+  <form id="Edit">
+    <field name="editChoice">
+      <!--prompt>Your current order is <value</prompt-->
+    </field>
+  </form>
+  
+  <form id="Finish">
+    <field name="finishChoice">
+      <prompt>Currently, your order total cost is $<value expr="totalCost"></value> <break/>
+        Are you sure you want to exit?
+      </prompt>
+        <grammar type="application/grammar+xml" root="finishChoice" version="1.0">
+              <rule id="finishChoice" scope="public">
+                <one-of>
+                  <item>yes</item>
+                  <item>no</item>
+                </one-of>
+              </rule>
+        </grammar>
+        <filled>
+          <if cond="finishChoice =='yes'">
+            <prompt>Thank you for using the Magic meal ordering service. <break/> Goodbye</prompt>
+            <exit/>
+          </if>
+          <else>
+            
+          </else>
+        </filled>
+    </field>
+  </form>
+</vxml>
