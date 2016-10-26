@@ -102,7 +102,7 @@
               </noinput>
               <nomatch>
                 <field name="endOfDrinkMenuTapered">
-                  <prompt>Say drink, sandwhich, order, or done</prompt>
+                  <prompt>Say drink, sandwhich, edit, or done</prompt>
                     <grammar type="application/grammar+xml" root="endOfDrinkMenuTapered" version="1.0">
                       <rule id="endOfDrinkMenuTapered" scope="public">
                         <one-of>
@@ -201,13 +201,79 @@
         </grammar>
         <filled>
           <if cond="finishChoice =='yes'">
-            <prompt>Thank you for using the Magic meal ordering service. <break/> Goodbye</prompt>
+            <prompt>Thank you for using the Magic meal ordering service. <break/> 
+              Your order has been placed.<break/>Goodbye
+            </prompt>
             <exit/>
           </if>
           <else>
-            
-          </else>
+            <prompt>You have chosen to ot exit the application.</prompt>
+            <field name="finishChoiceNo">
+              <prompt>Would you like to order another drink, order a sandwhich, or edit your order?</prompt>
+                <grammar type="application/grammar+xml" root="finishChoiceNo" version="1.0">
+                  <rule id="finishChoiceNo" scope="public">
+                    <one-of>
+                      <item>drink</item>
+                      <item>sandwhich</item>
+                      <item>edit</item>
+                    </one-of>
+                  </rule>
+                </grammar>
+                <filled>
+                  <if cond="finishChoiceNo == 'drink'">
+                    <goto next="Drink"></goto>
+                  </if>
+                  <elseif cond="finishChoiceNo =='sandwhich'">
+                    <goto next="Sandwhich"></goto>
+                  </elseif>
+                  <elseif cond="finishChoiceNo =='edit">
+                    <goto next="Edit"></goto>
+                  </elseif>
+                </filled>
+                <noinput>
+                  <reprompt/>
+                </noinput>
+                <nomatch>
+                  <field name="finishChoiceNoTapered">
+                    <prompt>Say drink, sandwhich, or edit</prompt>
+                      <grammar type="application/grammar+xml" root="finishChoiceNoTapered" version="1.0">
+                        <rule id="finishChoiceNoTapered" scope="public">
+                          <one-of>
+                            <item>drink</item>
+                            <item>sandwhich</item>
+                            <item>edit</item>
+                          </one-of>
+                        </rule>
+                      </grammar>
+                      <filled>
+                        <if cond="endOfDrinkMenuTapered == 'drink'">
+                          <goto next="Drink"></goto>
+                        </if>
+                        <elseif cond="endOfDrinkMenuTapered =='sandwhich'">
+                          <goto next="Sandwhich"></goto>
+                        </elseif>
+                        <elseif cond="endOfDrinkMenuTapered =='edit">
+                          <goto next="Edit"></goto>
+                        </elseif>
+                      </filled>
+                      <noinput>
+                        <reprompt/>
+                      </noinput>
+                      <nomatch>
+                        <reprompt/>
+                      </nomatch>
+                  </field>
+                </nomatch>
+              </field>
+            </else>
         </filled>
+        <noinput>
+          <reprompt/>
+        </noinput>
+        <nomatch>
+          That is not an acceptable option. Say <emphasis/>yes to exit or <emphasis/>no to not leave.
+          <reprompt/>
+        </nomatch>
     </field>
   </form>
 </vxml>
